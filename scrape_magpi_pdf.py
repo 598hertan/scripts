@@ -49,18 +49,13 @@ def get_pdf_url(url):
     link_tag = (soup.select('div > .col-xs-12 a')[5])
     pdf_url = (link_tag.get('href'))
 
-    # if 'pdf' in pdf_url:
-    #     return pdf_url
-    # else:
-    #     print("This program failed to identify where the PDF file is. Please inspect the html element and update the code.\n")
     return pdf_url
 
 def save_pdf(url, target_directory_name=''):
     filename = get_PDF_fn(url)
 
-
-    if 'pdf' not in filename:
-        print("This program failed to identify where the PDF file is. Please inspect the html element and update the code.\n")
+    if '.pdf' not in filename:
+        print("This program failed to identify where the PDF file is. Please inspect the html element and update the code.\nEnd program.")
         quit()
 
     path = os.getcwd()
@@ -72,7 +67,7 @@ def save_pdf(url, target_directory_name=''):
         loose_files = [file for file in listdir(target_directory_name) if isfile(join(target_directory_name, file))]
 
         if filename in loose_files:
-            print("{} already exists!\nEnd program.".format(filename))
+            print("{} already exists on your hard-drive at '{}\{}'\nEnd program.".format(filename, path, target_directory_name))
         else:
             response = requests.get(url)
             print("The PDF file '{}' is downloading to {}. This may take a minute or so...".format(filename, target_directory_name))
