@@ -6,6 +6,7 @@ Date:   09/23/2017
 
 DESCRIPTION:
 Download MagPi magazine file.
+Assumes that from the soup, the file is located at soup.select('div > .col-xs-12 a')[5]
 
 """
 import bs4, requests, os
@@ -48,10 +49,20 @@ def get_pdf_url(url):
     link_tag = (soup.select('div > .col-xs-12 a')[5])
     pdf_url = (link_tag.get('href'))
 
+    # if 'pdf' in pdf_url:
+    #     return pdf_url
+    # else:
+    #     print("This program failed to identify where the PDF file is. Please inspect the html element and update the code.\n")
     return pdf_url
 
 def save_pdf(url, target_directory_name=''):
     filename = get_PDF_fn(url)
+
+
+    if 'pdf' not in filename:
+        print("This program failed to identify where the PDF file is. Please inspect the html element and update the code.\n")
+        quit()
+
     path = os.getcwd()
 
     if target_directory_name == '':
@@ -61,9 +72,10 @@ def save_pdf(url, target_directory_name=''):
         loose_files = [file for file in listdir(target_directory_name) if isfile(join(target_directory_name, file))]
 
         if filename in loose_files:
-            print("{} already exists!".format(filename))
+            print("{} already exists!\nEnd program.".format(filename))
         else:
             response = requests.get(url)
+            print("The PDF file '{}' is downloading to {}. This may take a minute or so...".format(filename, target_directory_name))
             pdf_file = open(os.path.join(target_directory_name, os.path.basename(filename)), 'wb')
 
             # write to disk
