@@ -24,7 +24,7 @@ def scrape_url(url):
     return soup
 def save_HTML(url, temp_filename=''):
     # retrieve HTML as text from a URL, return the txt file created
-    r = requests.get(url, '')
+    r = requests.get(url)
     r.raise_for_status()
 
     if temp_filename == '':
