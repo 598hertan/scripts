@@ -120,4 +120,4 @@ def main():
     print("File '{}' created successfully".format(csv_output))
 
 if __name__ == "__main__":
-	main()
+    main()

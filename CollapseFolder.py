@@ -82,11 +82,11 @@ class CollapseFolder:
                 file_log.write('************\n')
                 print("Log file generated here: '{}'".format(self.path))
 
-
-
 def main():
     path = 'C:\FOLDER1\FOLDER2'   #path folder goes here....
     p = CollapseFolder(path)
+
+
 
 
 if __name__ == "__main__":
