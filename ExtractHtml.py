@@ -1,6 +1,13 @@
-__author__ = 'JHertan'
-#November, 5, 2015
+#!/usr/bin/python35
 
+"""
+Author: James Hertan
+Date:   11/05/2015
+
+DESCRIPTION:
+I was playing around with classes and scraping websites for data following a tutorial on 'pythonanywhere.com'. This is obsolete. -JH, 09/25/2017
+
+"""
 from bs4 import BeautifulSoup   #http://www.crummy.com/software/BeautifulSoup/bs4/doc/#searching-the-tree
 import urllib.request           #for opening a web page and saving it as html file
 import os                       #for deleting my temp html files

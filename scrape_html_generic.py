@@ -2,23 +2,20 @@
 
 """
 Author: James Hertan
-Date:   09/23/2017
+Date:   09/25/2017
 
 DESCRIPTION:
-Download MagPi magazine file.
-Assumes that from the soup, the file is located at soup.select('div > .col-xs-12 a')[5]
+Generic methods for scraping websites.
 
 """
+
 import bs4, requests, os
-from os import listdir, rename, makedirs
-from os.path import exists, join, isfile
-# from scrape_html_generic import save_HTML as get_html
-# from scrape_html_generic import scrape_url as scraper
+from os import listdir, makedirs
+from os.path import join, isfile
 
 def scrape_url(url):
     """input a url, save the HTML as a text file in cwd, output its soup"""
 
-    # temp_file = get_html(url)          #COMMENT THIS OUT to use the cached temp file
     temp_file = save_HTML(url)          #COMMENT THIS OUT to use the cached temp file
     # temp_file = 'raspberrypi.txt'     #UNCOMMENT THIS to use the cached temp file
 
@@ -26,45 +23,46 @@ def scrape_url(url):
     soup = bs4.BeautifulSoup(html, "html.parser")
     return soup
 def save_HTML(url, temp_filename=''):
-    # retrieve HTML as text from a URL, return the txt file created
+    # retrieve HTML as text from a URL, return the filename of the txt file created
     r = requests.get(url)
     r.raise_for_status()
 
+    path = os.getcwd()
+    target_directory_name = join(path, 'temp')
+
     if temp_filename == '':
         temp_filename = str(url.split('.')[1]) + '.txt'
+        temp_filename = join(target_directory_name, temp_filename)
 
     success_message = "Temp file '{}' created!".format(temp_filename)
 
-    with open(temp_filename, 'wb') as fn:
-        for chunk in r.iter_content(100000):
-            fn.write(chunk)
-
-    print(success_message)
+    try:
+        with open(temp_filename, 'wb') as fn:
+            for chunk in r.iter_content(100000):
+                fn.write(chunk)
+    except FileNotFoundError as e:
+        makedirs(target_directory_name)
+        save_HTML(url)
+    else:
+        print(success_message)
     return temp_filename
 def get_text_from_file(file):
     """input file, outputs reading of file"""
     with open(file, 'r', encoding='utf-8') as fn:
         return fn.read()
 
-def get_pdf_url(soup):
-    '''get the PDF url for the magpi mag'''
 
-    link_tag = (soup.select('div > .col-xs-12 a')[5])
-    pdf_url = (link_tag.get('href'))
-
-    return pdf_url
-
-def save_pdf(pdf_url, target_directory_name=''):
+def save_pdf_from_url(pdf_url, target_directory_name=''):
+    """input the url of the pdf file to download, file saves to a PDF folder"""
     filename = get_PDF_fn(pdf_url)
 
     if '.pdf' not in filename:
-        print("This program failed to identify where the PDF file is. Please inspect the html element and update the code.\nEnd program.")
-        quit()
+        filename = 'temp.pdf'
 
     path = os.getcwd()
 
     if target_directory_name == '':
-        target_directory_name = join(path, 'magpi')
+        target_directory_name = join(path, 'PDF')
 
     try:
         loose_files = [file for file in listdir(target_directory_name) if isfile(join(target_directory_name, file))]
@@ -85,7 +83,7 @@ def save_pdf(pdf_url, target_directory_name=''):
     except (FileNotFoundError) as e:
             print("The target directory doesn't exist.\n{}\nCreating directory '{}'.".format(e, target_directory_name))
             makedirs(target_directory_name)
-            save_pdf(pdf_url, target_directory_name)
+            save_pdf_from_url(pdf_url, target_directory_name)
     else:
         pass
 def get_PDF_fn(url):
@@ -95,9 +93,19 @@ def get_PDF_fn(url):
 
 
 def main():
+
+    # url = 'http://www.kissmywhisk.com'
     url = 'https://www.raspberrypi.org/magpi/'
     soup = scrape_url(url)
-    pdf_url = get_pdf_url(soup)
-    save_pdf(pdf_url, 'magpi')
+    print(type(soup))
+
+
+    # url = 'http://econpy.pythonanywhere.com/ex/001.html'
+    # soup = scrape_url(url)
+    # urls = (soup.select('a'))
+    # print(len(soup.select('a')))
+    #
+    # for link in urls:
+    #     print(link.get('href'))
 
 if __name__ == "__main__": main()
