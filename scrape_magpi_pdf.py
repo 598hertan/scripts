@@ -43,16 +43,16 @@ def get_text_from_file(file):
     with open(file, 'r', encoding='utf-8') as fn:
         return fn.read()
 
-def get_pdf_url(url):
+def get_pdf_url(soup):
     '''get the PDF url for the magpi mag'''
-    soup = scrape_url(url)
+
     link_tag = (soup.select('div > .col-xs-12 a')[5])
     pdf_url = (link_tag.get('href'))
 
     return pdf_url
 
-def save_pdf(url, target_directory_name=''):
-    filename = get_PDF_fn(url)
+def save_pdf(pdf_url, target_directory_name=''):
+    filename = get_PDF_fn(pdf_url)
 
     if '.pdf' not in filename:
         print("This program failed to identify where the PDF file is. Please inspect the html element and update the code.\nEnd program.")
@@ -69,7 +69,7 @@ def save_pdf(url, target_directory_name=''):
         if filename in loose_files:
             print("{} already exists on your hard-drive at '{}\{}'\nEnd program.".format(filename, path, target_directory_name))
         else:
-            response = requests.get(url)
+            response = requests.get(pdf_url)
             print("The PDF file '{}' is downloading to {}. This may take a minute or so...".format(filename, target_directory_name))
             pdf_file = open(os.path.join(target_directory_name, os.path.basename(filename)), 'wb')
 
@@ -82,7 +82,7 @@ def save_pdf(url, target_directory_name=''):
     except (FileNotFoundError) as e:
             print("The target directory doesn't exist.\n{}\nCreating directory '{}'.".format(e, target_directory_name))
             makedirs(target_directory_name)
-            save_pdf(url, target_directory_name)
+            save_pdf(pdf_url, target_directory_name)
     else:
         pass
 def get_PDF_fn(url):
@@ -93,7 +93,8 @@ def get_PDF_fn(url):
 
 def main():
     url = 'https://www.raspberrypi.org/magpi/'
-    pdf_url = get_pdf_url(url)
+    soup = scrape_url(url)
+    pdf_url = get_pdf_url(soup)
     save_pdf(pdf_url, 'magpi')
 
 if __name__ == "__main__": main()
