@@ -10,10 +10,8 @@ Assumes that from the soup, the file is located at soup.select('div > .col-xs-12
 
 """
 import bs4, requests, os
-from os import listdir, rename, makedirs
-from os.path import exists, join, isfile
-# from scrape_html_generic import save_HTML as get_html
-# from scrape_html_generic import scrape_url as scraper
+from os import listdir, makedirs
+from os.path import join, isfile
 
 def scrape_url(url):
     """input a url, save the HTML as a text file in cwd, output its soup"""
@@ -72,8 +70,8 @@ def save_pdf(pdf_url, target_directory_name=''):
         if filename in loose_files:
             print("{} already exists on your hard-drive at '{}\{}'\nEnd program.".format(filename, path, target_directory_name))
         else:
-            response = requests.get(pdf_url)
             print("The PDF file '{}' is downloading to {}. This may take a minute or so...".format(filename, target_directory_name))
+            response = requests.get(pdf_url)
             pdf_file = open(os.path.join(target_directory_name, os.path.basename(filename)), 'wb')
 
             # write to disk

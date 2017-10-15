@@ -11,13 +11,17 @@ Generic methods for scraping websites.
 
 import bs4, requests, os
 from os import listdir, makedirs
+import json
 from os.path import join, isfile
 
-def scrape_url(url):
+#--------WEB SCRAPING-----------
+def scrape_url(url, local=''):
     """input a url, save the HTML as a text file in cwd, output its soup"""
 
-    temp_file = save_HTML(url)          #COMMENT THIS OUT to use the cached temp file
-    # temp_file = 'raspberrypi.txt'     #UNCOMMENT THIS to use the cached temp file
+    if local == '':
+        temp_file = save_HTML(url)          #COMMENT THIS OUT to use the cached temp file
+    else:
+        temp_file = local     #Comment this to generate a new temp file
 
     html = get_text_from_file(temp_file)
     soup = bs4.BeautifulSoup(html, "html.parser")
@@ -50,10 +54,20 @@ def get_text_from_file(file):
     """input file, outputs reading of file"""
     with open(file, 'r', encoding='utf-8') as fn:
         return fn.read()
+def get_text_from_selection(soup_selection_body):
+        """input a soup selection, return its text as a string"""
+        body_text = []
+        for i in soup_selection_body:
+            body_text.append(i.getText())
+        return ', '.join(body_text)
+
+#TODO Write get_links(soup_selection_a)
+#--------END WEB SCRAPING-----------
 
 
+#--------PDF Scripts-----------
 def save_pdf_from_url(pdf_url, target_directory_name=''):
-    """input the url of the pdf file to download, file saves to a PDF folder"""
+    """input the url of the pdf file to download, file saves to a 'PDF' folder in cwd unless a path is identified"""
     filename = get_PDF_fn(pdf_url)
 
     if '.pdf' not in filename:
@@ -70,8 +84,8 @@ def save_pdf_from_url(pdf_url, target_directory_name=''):
         if filename in loose_files:
             print("{} already exists on your hard-drive at '{}\{}'\nEnd program.".format(filename, path, target_directory_name))
         else:
-            response = requests.get(pdf_url)
             print("The PDF file '{}' is downloading to {}. This may take a minute or so...".format(filename, target_directory_name))
+            response = requests.get(pdf_url)
             pdf_file = open(os.path.join(target_directory_name, os.path.basename(filename)), 'wb')
 
             # write to disk
@@ -90,6 +104,10 @@ def get_PDF_fn(url):
     '''helper function for save_pdf(), provide the magpiPDF url to determine the pdf name'''
     name = url.split('/')[4]
     return name
+#--------END PDF Scripts-----------
+
+#TODO Write save_scrape_to_JSON()
+
 
 
 def main():

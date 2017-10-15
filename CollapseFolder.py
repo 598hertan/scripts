@@ -5,6 +5,9 @@ from os import listdir, rename, makedirs
 from os.path import exists, join, isfile
 from datetime import date, datetime
 
+#TODO Bug in the log file, there's an incorrect / in the first line of the log.
+#TODO If the only loose file is the log file from this script, do nothing.
+
 class CollapseFolder:
     """
     Create an arbitrary object and provide a directory to archive the directories loose files into a CURRENT_YEAR folder.
@@ -50,11 +53,12 @@ class CollapseFolder:
         logger = list()
         logger_filename = join(self.path,'CollapseFolder_Log_' + str(self.today.month) + '_' + str(self.today.day) + '_' + str(self.today.year) + '.txt')
 
-
-        if not self.target_directory_exists():   #target directory exists?
+        # target directory exists?
+        if not self.target_directory_exists():
             self.create_target_directory()
 
-        for file in self.loose_files:           #move files
+        # move files
+        for file in self.loose_files:
             if file == logger_filename:
                 continue
             else:
@@ -65,7 +69,8 @@ class CollapseFolder:
                 except FileExistsError as e:
                     pass
 
-        if exists(logger_filename):             #log what we've done
+        # log what we've done
+        if exists(logger_filename):
             with open(logger_filename, 'a') as file_log:
                 file_log.write('CollapseFolder process run on ' + str(self.today.month) + '/' + str(self.today.day) + '/' + str(self.today.year) + ' at ' + str(datetime.now().hour) + ':' + str(datetime.now().minute) + ':' + str(datetime.now().second)+ '.\n')
                 file_log.write("Moved {} files from '{}' to '{}'\n\n".format(len(logger), self.path, join(self.path, self.target_directory_name)))
@@ -75,7 +80,7 @@ class CollapseFolder:
                 print("Existing log file updated: '{}'".format(self.path))
         else:
             with open(logger_filename, 'w+') as file_log:
-                file_log.write('CollapseFolder process run on ' + str(self.today.month) + '/' + str(self.today.day) + '/' + str(self.today.year) + str(datetime.now().hour) + ':' + str(datetime.now().minute) + ':' + str(datetime.now().second) + '.\n')
+                file_log.write('CollapseFolder process run on ' + str(self.today.month) + '/' + str(self.today.day) + '/' + str(self.today.year) + ' at ' + str(datetime.now().hour) + ':' + str(datetime.now().minute) + ':' + str(datetime.now().second) + '.\n')
                 file_log.write("Moved {} files from '{}' to '{}.'\n\n".format(len(logger), self.path, join(self.path, self.target_directory_name)))
                 for n, file in enumerate(logger):
                     file_log.write(str(n+1) + ': ' + file + '\n')
@@ -83,7 +88,7 @@ class CollapseFolder:
                 print("Log file generated here: '{}'".format(self.path))
 
 def main():
-    path = 'C:\FOLDER1\FOLDER2'   #path folder goes here....
+    path = 'C:/FOLDER1/FOLDER2'   #path folder goes here....
     p = CollapseFolder(path)
 
 
