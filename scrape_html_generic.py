@@ -16,7 +16,7 @@ from os.path import join, isfile
 
 #--------WEB SCRAPING-----------
 def scrape_url(url, local=''):
-    """input a url, save the HTML as a text file in cwd, output its soup"""
+    """input a url, output its soup by saving the HTML as a text file in cwd"""
 
     if local == '':
         temp_file = save_HTML(url)          #COMMENT THIS OUT to use the cached temp file
@@ -64,6 +64,37 @@ def get_text_from_selection(soup_selection_body):
 #TODO Write get_links(soup_selection_a)
 #--------END WEB SCRAPING-----------
 
+#--------API Scripts-----------
+###  Access
+def get_key(filename):
+    '''Retrieve the API key from a key file'''
+    with open(filename, 'r') as fn:
+        key = fn.readline()
+        return (key)
+
+###  Read
+def convert_file_to_json(txt_file):
+    '''Pass a filename, converts the file's text to a JSON object. Returns the JSON object, 0 if something went wrong.'''
+    try:
+        with open(txt_file, 'r') as fn:
+            data = json.loads(fn.read())
+            return data
+    except FileNotFoundError as e:
+        print("File does not exist.")
+        return 0
+
+###  Write
+def save_data(data, filename='data.txt'):
+    '''Save data to a txt file. Data is converted to a string. Output is a new file.'''
+    with open(filename, 'w') as fn:
+        fn.write(json.dumps(data))
+
+###  Update
+#TODO Write save_scrape_to_JSON()
+###  Delete
+#--------END API Scripts-----------
+
+
 
 #--------PDF Scripts-----------
 def save_pdf_from_url(pdf_url, target_directory_name=''):
@@ -106,7 +137,13 @@ def get_PDF_fn(url):
     return name
 #--------END PDF Scripts-----------
 
-#TODO Write save_scrape_to_JSON()
+
+#--------Printing Scripts-----------
+def pretty_print(self, label, value, adjust=15):
+    '''Helper function for print_data() to print nicely'''
+    print(label.ljust(adjust), value)
+#--------END Printing-----------
+
 
 
 
