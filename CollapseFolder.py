@@ -5,8 +5,7 @@ from os import listdir, rename, makedirs
 from os.path import exists, join, isfile
 from datetime import date, datetime
 
-#TODO Bug in the log file, there's an incorrect / in the first line of the log.
-#TODO If the only loose file is the log file from this script, do nothing.
+#TODO Replace manual logging with a logging solution like...
 
 class CollapseFolder:
     """

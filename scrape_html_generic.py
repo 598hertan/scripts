@@ -15,13 +15,13 @@ import json
 from os.path import join, isfile
 
 #--------WEB SCRAPING-----------
-def scrape_url(url, local=''):
+def scrape_url(url, local_file=''):
     """input a url, output its soup by saving the HTML as a text file in cwd"""
 
-    if local == '':
+    if local_file == '':
         temp_file = save_HTML(url)          #COMMENT THIS OUT to use the cached temp file
     else:
-        temp_file = local     #Comment this to generate a new temp file
+        temp_file = local_file     #Comment this to generate a new temp file
 
     html = get_text_from_file(temp_file)
     soup = bs4.BeautifulSoup(html, "html.parser")
@@ -91,6 +91,7 @@ def save_data(data, filename='data.txt'):
 
 ###  Update
 #TODO Write save_scrape_to_JSON()
+
 ###  Delete
 #--------END API Scripts-----------
 
@@ -113,7 +114,7 @@ def save_pdf_from_url(pdf_url, target_directory_name=''):
         loose_files = [file for file in listdir(target_directory_name) if isfile(join(target_directory_name, file))]
 
         if filename in loose_files:
-            print("{} already exists on your hard-drive at '{}\{}'\nEnd program.".format(filename, path, target_directory_name))
+            print("'{}' already exists on your hard-drive at '{}'.\nEnd program.".format(filename, target_directory_name))
         else:
             print("The PDF file '{}' is downloading to {}. This may take a minute or so...".format(filename, target_directory_name))
             response = requests.get(pdf_url)
