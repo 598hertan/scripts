@@ -15,7 +15,7 @@ import json
 from os.path import join, isfile
 
 #--------WEB SCRAPING-----------
-def scrape_url(url, local_file=''):
+def get_soup(url, local_file=''):
     """input a url, output its soup by saving the HTML as a text file in cwd"""
 
     if local_file == '':
@@ -23,7 +23,7 @@ def scrape_url(url, local_file=''):
     else:
         temp_file = local_file     #Comment this to generate a new temp file
 
-    html = get_text_from_file(temp_file)
+    html = create_text_file(temp_file)
     soup = bs4.BeautifulSoup(html, "html.parser")
     return soup
 def save_HTML(url, temp_filename=''):
@@ -50,7 +50,7 @@ def save_HTML(url, temp_filename=''):
     else:
         print(success_message)
     return temp_filename
-def get_text_from_file(file):
+def create_text_file(file):
     """input file, outputs reading of file"""
     with open(file, 'r', encoding='utf-8') as fn:
         return fn.read()
@@ -152,12 +152,12 @@ def main():
 
     # url = 'http://www.kissmywhisk.com'
     url = 'https://www.raspberrypi.org/magpi/'
-    soup = scrape_url(url)
+    soup = get_soup(url)
     print(type(soup))
 
 
     # url = 'http://econpy.pythonanywhere.com/ex/001.html'
-    # soup = scrape_url(url)
+    # soup = get_soup(url)
     # urls = (soup.select('a'))
     # print(len(soup.select('a')))
     #

@@ -13,7 +13,7 @@ import bs4, requests, os
 from os import listdir, makedirs
 from os.path import join, isfile
 
-def scrape_url(url):
+def get_soup(url):
     """input a url, save the HTML as a text file in cwd, output its soup"""
 
     # temp_file = get_html(url)          #COMMENT THIS OUT to use the cached temp file
@@ -94,7 +94,7 @@ def get_PDF_fn(url):
 
 def main():
     url = 'https://www.raspberrypi.org/magpi/'
-    soup = scrape_url(url)
+    soup = get_soup(url)
     pdf_url = get_pdf_url(soup)
     save_pdf(pdf_url, 'magpi')
 
